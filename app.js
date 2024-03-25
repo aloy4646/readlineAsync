@@ -1,60 +1,39 @@
 const validator = require("validator")
-const tanya = require('./tanya.js')
+const tanyakan = require('./tanya.js')
 const fs = require("fs")
 
 
 main()
-async function main(){
-    var nama
-    var nomorHandphone
-    var email
 
-    valid = false
-    do {
-        nama = await tanya("Siapa nama anda? ")
-        if (validator.isAlpha(nama)) {
-            valid = true
-        }else{
-            console.log("Format nama tidak sesuai, silahkan coba lagi\n")
-        }
-    } while (!valid);
+async function main() {
 
-    valid = false
-    do {
-        nomorHandphone = await tanya("Berapa nomor handphone anda? ")
-        if (validator.isMobilePhone(nomorHandphone, "id-ID")) {
-            valid = true
-        }else{
-            console.log("Format nomor handphone tidak sesuai, silahkan coba lagi\n")
-        }
-    } while (!valid);
+    //memanggil function "tanyakan" menggunakan parameter beriisi pertanyaan, validator, dan errorMessage
+    //saya nyebutnya "pertanyaanConfig" / configurasi dari pertanyaan
+    //function "tanyakan" akan mengembalikan sebuah array yang berisi jawaban-jawaban dari pertanyaan
+    const arrayJawaban = await tanyakan([
+        { pertanyaan: "Siapa nama anda? ", validator: validator.isAlpha, errorMessage: "Format nama tidak sesuai, silahkan coba lagi\n" },
+        { pertanyaan: "Berapa nomor handphone anda? ", validator: (input) => validator.isMobilePhone(input, "id-ID"), errorMessage: "Format nomor handphone tidak sesuai, silahkan coba lagi\n" },
+        { pertanyaan: "Apa nama email anda? ", validator: validator.isEmail, errorMessage: "Format email tidak sesuai, silahkan coba lagi\n" }
+    ])
 
-    valid = false
-    do {
-        email = await tanya("Apa nama email anda? ")
-        if (validator.isEmail(email)) {
-            valid = true
-        }else{
-            console.log("Format email tidak sesuai, silahkan coba lagi\n")
-        }
-    } while (!valid);
+    //memasukkan nilai-nilai dari arrayJawaban ke variable terpisah
+    const [nama, nomorHandphone, email] = arrayJawaban
 
-    console.log("===========================\n" + 
-                "Berikut ini adalah data diri anda\n" + 
-                "Nama: " + nama+
-                "\nNomor handphone: " + nomorHandphone +
-                "\nEmail: " + email)
-    
-    simpanContact([nama, nomorHandphone, email])
+    console.log("===========================\n" +
+        "Berikut ini adalah data diri anda\n" +
+        "Nama: " + nama +
+        "\nNomor handphone: " + nomorHandphone +
+        "\nEmail: " + email)
 
-    process.exit() 
+    simpanContact(nama, nomorHandphone, email)
+    process.exit()
 }
 
-function simpanContact(jawaban){
+function simpanContact(nama, nomorHandphone, email){
     //membuat object contact berisi nama, nomorHandphone dan email
-    const contact = {nama: jawaban[0], 
-        nomorHandphone: jawaban[1], 
-        email: jawaban[2]}
+    const contact = {nama, 
+        nomorHandphone, 
+        email}
 
     //membuat folder data jika belum ada
     const dirPath = './data'
