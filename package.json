@@ -1,0 +1,15 @@
+{
+  "name": "readlineasync",
+  "version": "1.0.0",
+  "description": "Project readline menggunakan asynchronous",
+  "main": "appMetode2.js",
+  "scripts": {
+    "start": "node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "validator": "^13.11.0"
+  }
+}
